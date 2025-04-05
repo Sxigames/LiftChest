@@ -14,6 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Transformation;
+import org.joml.AxisAngle4f;
+import org.joml.Vector3f;
 
 
 public class playerInteract implements Listener {
@@ -28,7 +31,7 @@ public class playerInteract implements Listener {
             if (clickedBlock.getState() instanceof Chest chest) {
                 Plugin plugin = LiftChest.getPlugin();
                 event.setCancelled(true);
-                BlockDisplay newChest = clickedBlock.getWorld().spawn(player.getLocation(), BlockDisplay.class);
+                BlockDisplay newChest = clickedBlock.getWorld().spawn(clickedBlock.getLocation(), BlockDisplay.class);
                 newChest.setBlock(clickedBlock.getBlockData());
                 byte[] items = ItemStack.serializeItemsAsBytes(chest.getBlockInventory().getContents());
                 NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
@@ -49,6 +52,7 @@ public class playerInteract implements Listener {
                 inventory.setItemInMainHand(ItemStack.of(Material.STONE_BUTTON));
                 inventory.setItemInOffHand(ItemStack.of(Material.STONE_BUTTON));
                 player.addPassenger(newChest);
+                newChest.setTransformation(new Transformation(new Vector3f(0.0f, -1.0f, -0.4f), new AxisAngle4f(), new Vector3f(0.75f, 0.75f, 0.75f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");
                 player.sendMessage("Lift activated!");
             }
