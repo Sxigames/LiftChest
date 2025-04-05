@@ -24,7 +24,7 @@ public class playerInteract implements Listener {
         if (clickedBlock == null ){
             return;
         }
-        if (player.isSneaking()) {
+        if (player.isSneaking() && !player.getScoreboardTags().contains("carrying")) {
             if (clickedBlock.getState() instanceof Chest chest) {
                 Plugin plugin = LiftChest.getPlugin();
                 event.setCancelled(true);
