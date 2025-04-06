@@ -3,6 +3,7 @@ package me.sxigames.liftChest.events;
 import me.sxigames.liftChest.LiftChest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.ItemDisplay;
@@ -52,6 +53,8 @@ public class playerPlaceBlock implements Listener {
                     chestState.getBlockInventory().setStorageContents(items);
                     passenger.remove();
                     player.removeScoreboardTag("carrying");
+                    NamespacedKey slowKey = new NamespacedKey(plugin, "carryingSlow");
+                    Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).removeModifier(slowKey);
                 }
             });
         }

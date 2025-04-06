@@ -3,6 +3,8 @@ package me.sxigames.liftChest.events;
 import me.sxigames.liftChest.LiftChest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.ItemDisplay;
@@ -17,6 +19,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
+
+import java.util.Objects;
 
 
 public class playerInteract implements Listener {
@@ -57,6 +61,9 @@ public class playerInteract implements Listener {
                 player.addPassenger(newChest);
                 newChest.setTransformation(new Transformation(new Vector3f(0.0f, -0.8f, 0.5f), new AxisAngle4f(), new Vector3f(0.8f, 0.8f, 0.8f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");
+                NamespacedKey slowKey = new NamespacedKey(plugin, "carryingSlow");
+                Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).addModifier(new AttributeModifier(slowKey, -0.05, AttributeModifier.Operation.ADD_NUMBER));
+                player.setFoodLevel(player.getFoodLevel() - 1);
             }
         }
     }
