@@ -1,5 +1,5 @@
 name: LiftChest
-version: '0.0.1a'
+version: '0.0.2a'
 author: Sxigames
 main: me.sxigames.liftChest.LiftChest
 api-version: '1.21'
