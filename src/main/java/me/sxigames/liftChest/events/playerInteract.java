@@ -24,7 +24,10 @@ public class playerInteract implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null ){
+        if (clickedBlock == null){
+            return;
+        }
+        if(player.getInventory().getItemInMainHand().getType() == Material.CHEST || player.getInventory().getItemInOffHand().getType() == Material.CHEST){
             return;
         }
         if (player.isSneaking() && !player.getScoreboardTags().contains("carrying")) {
@@ -54,7 +57,6 @@ public class playerInteract implements Listener {
                 player.addPassenger(newChest);
                 newChest.setTransformation(new Transformation(new Vector3f(0.0f, -1.0f, -0.4f), new AxisAngle4f(), new Vector3f(0.75f, 0.75f, 0.75f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");
-                player.sendMessage("Lift activated!");
             }
         }
     }
