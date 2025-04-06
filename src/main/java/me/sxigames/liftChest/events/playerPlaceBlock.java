@@ -26,8 +26,10 @@ public class playerPlaceBlock implements Listener {
             player.getPassengers().forEach((passenger) -> {
                 if (passenger.getScoreboardTags().contains("carried") && passenger instanceof BlockDisplay blockDisplay) {
                     Plugin plugin = LiftChest.getPlugin();
-                    block.setBlockData(blockDisplay.getBlock());
-                    Chest chest = (Chest) block.getState();
+                    org.bukkit.block.data.type.Chest chestData = (org.bukkit.block.data.type.Chest) blockDisplay.getBlock();
+                    chestData.setType(org.bukkit.block.data.type.Chest.Type.SINGLE);
+                    chestData.setFacing(player.getFacing().getOppositeFace());
+                    block.setBlockData(chestData);
                     NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
                     ItemStack[] items = ItemStack.deserializeItemsFromBytes(Objects.requireNonNull(passenger.getPersistentDataContainer().get(chestKey, PersistentDataType.BYTE_ARRAY)));
                     NamespacedKey mainHandKey = new NamespacedKey(plugin, "mainHandSave");
@@ -45,7 +47,8 @@ public class playerPlaceBlock implements Listener {
                         byte[] offHand = Objects.requireNonNull(passenger.getPersistentDataContainer().get(offHandKey, PersistentDataType.BYTE_ARRAY));
                         inventory.setItemInOffHand(ItemStack.deserializeBytes(offHand));
                     }
-                    chest.getBlockInventory().setStorageContents(items);
+                    Chest chestState = (Chest) block.getState();
+                    chestState.getBlockInventory().setStorageContents(items);
                     passenger.remove();
                     player.removeScoreboardTag("carrying");
                 }
