@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.BlockDisplay;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,8 +34,8 @@ public class playerInteract implements Listener {
             if (clickedBlock.getState() instanceof Chest chest) {
                 Plugin plugin = LiftChest.getPlugin();
                 event.setCancelled(true);
-                BlockDisplay newChest = clickedBlock.getWorld().spawn(clickedBlock.getLocation(), BlockDisplay.class);
-                newChest.setBlock(clickedBlock.getBlockData());
+                ItemDisplay newChest = clickedBlock.getWorld().spawn(clickedBlock.getLocation(), ItemDisplay.class);
+                newChest.setItemStack(ItemStack.of(clickedBlock.getType()));
                 byte[] items = ItemStack.serializeItemsAsBytes(chest.getBlockInventory().getContents());
                 NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
                 newChest.getPersistentDataContainer().set(chestKey, PersistentDataType.BYTE_ARRAY, items);
@@ -55,7 +55,7 @@ public class playerInteract implements Listener {
                 inventory.setItemInMainHand(ItemStack.of(Material.STONE_BUTTON));
                 inventory.setItemInOffHand(ItemStack.of(Material.STONE_BUTTON));
                 player.addPassenger(newChest);
-                newChest.setTransformation(new Transformation(new Vector3f(0.0f, -1.0f, -0.4f), new AxisAngle4f(), new Vector3f(0.75f, 0.75f, 0.75f), new AxisAngle4f()));
+                newChest.setTransformation(new Transformation(new Vector3f(0.0f, -0.8f, 0.5f), new AxisAngle4f(), new Vector3f(0.8f, 0.8f, 0.8f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");
             }
         }

@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.BlockDisplay;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,9 +24,10 @@ public class playerPlaceBlock implements Listener {
         Player player = event.getPlayer();
         if(block.getType() == Material.STONE_BUTTON && player.getScoreboardTags().contains("carrying")){
             player.getPassengers().forEach((passenger) -> {
-                if (passenger.getScoreboardTags().contains("carried") && passenger instanceof BlockDisplay blockDisplay) {
+                if (passenger.getScoreboardTags().contains("carried") && passenger instanceof ItemDisplay itemDisplay) {
                     Plugin plugin = LiftChest.getPlugin();
-                    org.bukkit.block.data.type.Chest chestData = (org.bukkit.block.data.type.Chest) blockDisplay.getBlock();
+                    block.setType(itemDisplay.getItemStack().getType());
+                    org.bukkit.block.data.type.Chest chestData = (org.bukkit.block.data.type.Chest) block.getBlockData();
                     chestData.setType(org.bukkit.block.data.type.Chest.Type.SINGLE);
                     chestData.setFacing(player.getFacing().getOppositeFace());
                     block.setBlockData(chestData);

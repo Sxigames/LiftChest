@@ -1,6 +1,7 @@
 package me.sxigames.liftChest;
 
 import me.sxigames.liftChest.events.playerChangeSlot;
+import me.sxigames.liftChest.events.playerMove;
 import me.sxigames.liftChest.events.playerPlaceBlock;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.sxigames.liftChest.events.playerInteract;
@@ -13,6 +14,7 @@ public final class LiftChest extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new playerInteract(), this);
         getServer().getPluginManager().registerEvents(new playerPlaceBlock(), this);
         getServer().getPluginManager().registerEvents(new playerChangeSlot(), this);
+        getServer().getPluginManager().registerEvents(new playerMove(), this);
     }
 
     @Override
