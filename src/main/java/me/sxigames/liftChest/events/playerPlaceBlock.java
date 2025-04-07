@@ -34,21 +34,9 @@ public class playerPlaceBlock implements Listener {
                     block.setBlockData(chestData);
                     NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
                     ItemStack[] items = ItemStack.deserializeItemsFromBytes(Objects.requireNonNull(passenger.getPersistentDataContainer().get(chestKey, PersistentDataType.BYTE_ARRAY)));
-                    NamespacedKey mainHandKey = new NamespacedKey(plugin, "mainHandSave");
-                    NamespacedKey offHandKey = new NamespacedKey(plugin, "offHandSave");
                     PlayerInventory inventory = player.getInventory();
-                    if (passenger.getPersistentDataContainer().get(mainHandKey, PersistentDataType.BYTE_ARRAY) == null) {
-                        inventory.setItemInMainHand(ItemStack.of(Material.AIR));
-                    } else{
-                        byte[] mainHand = Objects.requireNonNull(passenger.getPersistentDataContainer().get(mainHandKey, PersistentDataType.BYTE_ARRAY));
-                        inventory.setItemInMainHand(ItemStack.deserializeBytes(mainHand));
-                    }
-                    if (passenger.getPersistentDataContainer().get(offHandKey, PersistentDataType.BYTE_ARRAY) == null) {
-                        inventory.setItemInOffHand(ItemStack.of(Material.AIR));
-                    } else{
-                        byte[] offHand = Objects.requireNonNull(passenger.getPersistentDataContainer().get(offHandKey, PersistentDataType.BYTE_ARRAY));
-                        inventory.setItemInOffHand(ItemStack.deserializeBytes(offHand));
-                    }
+                    inventory.setItemInMainHand(ItemStack.of(Material.AIR));
+                    inventory.setItemInOffHand(ItemStack.of(Material.AIR));
                     Chest chestState = (Chest) block.getState();
                     chestState.getBlockInventory().setStorageContents(items);
                     passenger.remove();

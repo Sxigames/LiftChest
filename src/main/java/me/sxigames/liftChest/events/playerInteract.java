@@ -33,7 +33,7 @@ public class playerInteract implements Listener {
         if (clickedBlock == null){
             return;
         }
-        if(player.getInventory().getItemInMainHand().getType() == Material.CHEST || player.getInventory().getItemInOffHand().getType() == Material.CHEST){
+        if(player.getInventory().getItemInMainHand().getType() != Material.AIR || player.getInventory().getItemInOffHand().getType() != Material.AIR){
             return;
         }
         if (player.isSneaking() && !player.getScoreboardTags().contains("carrying")) {
@@ -48,16 +48,6 @@ public class playerInteract implements Listener {
                 clickedBlock.setType(org.bukkit.Material.AIR);
                 newChest.addScoreboardTag("carried");
                 PlayerInventory inventory = player.getInventory();
-                if(inventory.getItemInMainHand().getType() != Material.AIR){
-                    byte[] mainHand = inventory.getItemInMainHand().serializeAsBytes();
-                    NamespacedKey mainHandKey = new NamespacedKey(plugin, "mainHandSave");
-                    newChest.getPersistentDataContainer().set(mainHandKey, PersistentDataType.BYTE_ARRAY, mainHand);
-                }
-                if(inventory.getItemInOffHand().getType() != Material.AIR){
-                    byte[] offHand = inventory.getItemInOffHand().serializeAsBytes();
-                    NamespacedKey offHandKey = new NamespacedKey(plugin, "offHandSave");
-                    newChest.getPersistentDataContainer().set(offHandKey, PersistentDataType.BYTE_ARRAY, offHand);
-                }
                 ItemStack button = ItemStack.of(Material.STONE_BUTTON);
                 button.editMeta(itemMeta -> {
                     itemMeta.customName(Component.text("lifting"));
