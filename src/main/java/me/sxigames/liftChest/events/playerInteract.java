@@ -1,12 +1,14 @@
 package me.sxigames.liftChest.events;
 
 import me.sxigames.liftChest.LiftChest;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,8 +58,13 @@ public class playerInteract implements Listener {
                     NamespacedKey offHandKey = new NamespacedKey(plugin, "offHandSave");
                     newChest.getPersistentDataContainer().set(offHandKey, PersistentDataType.BYTE_ARRAY, offHand);
                 }
-                inventory.setItemInMainHand(ItemStack.of(Material.STONE_BUTTON));
-                inventory.setItemInOffHand(ItemStack.of(Material.STONE_BUTTON));
+                ItemStack button = ItemStack.of(Material.STONE_BUTTON);
+                button.editMeta(itemMeta -> {
+                    itemMeta.customName(Component.text("lifting"));
+                    itemMeta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+                });
+                inventory.setItemInMainHand(button);
+                inventory.setItemInOffHand(button);
                 player.addPassenger(newChest);
                 newChest.setTransformation(new Transformation(new Vector3f(0.0f, -0.8f, 0.5f), new AxisAngle4f(), new Vector3f(0.8f, 0.8f, 0.8f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");

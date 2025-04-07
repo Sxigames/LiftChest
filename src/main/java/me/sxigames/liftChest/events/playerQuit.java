@@ -2,12 +2,16 @@ package me.sxigames.liftChest.events;
 
 import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent;
 import me.sxigames.liftChest.LiftChest;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
@@ -39,6 +43,13 @@ public class playerQuit implements Listener {
             assert itemDisplay != null;
             itemDisplay.setVisibleByDefault(true);
             player.addPassenger(itemDisplay);
+            ItemStack button = ItemStack.of(Material.STONE_BUTTON);
+            button.editMeta(itemMeta -> {
+                itemMeta.customName(Component.text("lifting"));
+                itemMeta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+            });
+            player.getInventory().setItemInMainHand(button);
+            player.getInventory().setItemInOffHand(button);
         }
     }
 
