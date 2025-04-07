@@ -1,6 +1,7 @@
 package me.sxigames.liftChest.events;
 
 import me.sxigames.liftChest.LiftChest;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -38,6 +39,12 @@ public class playerPlaceBlock implements Listener {
                     inventory.setItemInMainHand(ItemStack.of(Material.AIR));
                     inventory.setItemInOffHand(ItemStack.of(Material.AIR));
                     Chest chestState = (Chest) block.getState();
+                    NamespacedKey chestNameKey = new NamespacedKey(plugin, "chestName");
+                    if (passenger.getPersistentDataContainer().has(chestNameKey, PersistentDataType.STRING)){
+                        String chestName = Objects.requireNonNull(passenger.getPersistentDataContainer().get(chestNameKey, PersistentDataType.STRING));
+                        chestState.customName(MiniMessage.miniMessage().deserialize(chestName));
+                        chestState.update();
+                    }
                     chestState.getBlockInventory().setStorageContents(items);
                     passenger.remove();
                     player.removeScoreboardTag("carrying");

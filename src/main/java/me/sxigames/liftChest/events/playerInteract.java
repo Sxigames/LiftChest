@@ -2,6 +2,7 @@ package me.sxigames.liftChest.events;
 
 import me.sxigames.liftChest.LiftChest;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -45,6 +46,10 @@ public class playerInteract implements Listener {
                 byte[] items = ItemStack.serializeItemsAsBytes(chest.getBlockInventory().getContents());
                 NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
                 newChest.getPersistentDataContainer().set(chestKey, PersistentDataType.BYTE_ARRAY, items);
+                if (chest.customName() != null){
+                    NamespacedKey chestNameKey = new NamespacedKey(plugin, "chestName");
+                    newChest.getPersistentDataContainer().set(chestNameKey, PersistentDataType.STRING, MiniMessage.miniMessage().serialize(Objects.requireNonNull(chest.customName())));
+                }
                 clickedBlock.setType(org.bukkit.Material.AIR);
                 newChest.addScoreboardTag("carried");
                 PlayerInventory inventory = player.getInventory();
