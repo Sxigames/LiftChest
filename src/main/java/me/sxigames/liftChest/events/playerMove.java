@@ -12,7 +12,7 @@ public class playerMove implements Listener {
         if (event.getPlayer().getScoreboardTags().contains("carrying")) {
             player.getPassengers().forEach((passenger) -> {
                 if (passenger.getScoreboardTags().contains("carried")) {
-                        passenger.setRotation(player.getBodyYaw(), passenger.getPitch());
+                        passenger.setRotation(player.getBodyYaw(), 0);
                 }
             });
         }
