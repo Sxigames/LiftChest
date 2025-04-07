@@ -55,6 +55,8 @@ public class playerPlaceBlock implements Listener {
                     player.removeScoreboardTag("carrying");
                     NamespacedKey slowKey = new NamespacedKey(plugin, "carryingSlow");
                     Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).removeModifier(slowKey);
+                    NamespacedKey carriedKey = new NamespacedKey(plugin, "carriedUUID");
+                    player.getPersistentDataContainer().remove(carriedKey);
                 }
             });
         }

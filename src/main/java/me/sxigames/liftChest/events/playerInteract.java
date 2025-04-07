@@ -64,6 +64,8 @@ public class playerInteract implements Listener {
                 NamespacedKey slowKey = new NamespacedKey(plugin, "carryingSlow");
                 Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).addModifier(new AttributeModifier(slowKey, -0.05, AttributeModifier.Operation.ADD_NUMBER));
                 player.setFoodLevel(player.getFoodLevel() - 1);
+                NamespacedKey carriedKey = new NamespacedKey(plugin, "carriedUUID");
+                player.getPersistentDataContainer().set(carriedKey, PersistentDataType.STRING, newChest.getUniqueId().toString());
             }
         }
     }
