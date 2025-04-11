@@ -7,8 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
@@ -38,36 +37,49 @@ public class playerInteract implements Listener {
             return;
         }
         if (player.isSneaking() && !player.getScoreboardTags().contains("carrying")) {
-            if (clickedBlock.getState() instanceof Chest chest) {
+            if (clickedBlock.getState() instanceof Container container) {
                 Plugin plugin = LiftChest.getPlugin();
                 event.setCancelled(true);
-                ItemDisplay newChest = clickedBlock.getWorld().spawn(clickedBlock.getLocation(), ItemDisplay.class);
-                newChest.setItemStack(ItemStack.of(clickedBlock.getType()));
-                byte[] items = ItemStack.serializeItemsAsBytes(chest.getBlockInventory().getContents());
-                NamespacedKey chestKey = new NamespacedKey(plugin, "chestData");
-                newChest.getPersistentDataContainer().set(chestKey, PersistentDataType.BYTE_ARRAY, items);
-                if (chest.customName() != null){
-                    NamespacedKey chestNameKey = new NamespacedKey(plugin, "chestName");
-                    newChest.getPersistentDataContainer().set(chestNameKey, PersistentDataType.STRING, MiniMessage.miniMessage().serialize(Objects.requireNonNull(chest.customName())));
+                ItemDisplay itemDisplay = clickedBlock.getWorld().spawn(clickedBlock.getLocation(), ItemDisplay.class);
+                itemDisplay.setItemStack(ItemStack.of(clickedBlock.getType()));
+                byte[] items;
+                if (container instanceof Chest chest){
+                    items = ItemStack.serializeItemsAsBytes(chest.getBlockInventory().getContents());
                 }
-                clickedBlock.setType(org.bukkit.Material.AIR);
-                newChest.addScoreboardTag("carried");
+                else{
+                    items = ItemStack.serializeItemsAsBytes(container.getInventory().getContents());
+
+                }
+                NamespacedKey inventoryKey = new NamespacedKey(plugin, "inventoryBytes");
+                itemDisplay.getPersistentDataContainer().set(inventoryKey, PersistentDataType.BYTE_ARRAY, items);
+                if (container.customName() != null){
+                    NamespacedKey containerNameKey = new NamespacedKey(plugin, "containerName");
+                    itemDisplay.getPersistentDataContainer().set(containerNameKey, PersistentDataType.STRING, MiniMessage.miniMessage().serialize(Objects.requireNonNull(container.customName())));
+                }
+                if (container instanceof Furnace furnace){
+                    NamespacedKey burnTimeKey = new NamespacedKey(plugin, "burnTime");
+                    itemDisplay.getPersistentDataContainer().set(burnTimeKey, PersistentDataType.SHORT, furnace.getBurnTime());
+                }
+                itemDisplay.addScoreboardTag("carried");
                 PlayerInventory inventory = player.getInventory();
-                ItemStack button = ItemStack.of(Material.STONE_BUTTON);
-                button.editMeta(itemMeta -> {
+                ItemStack handItem = ItemStack.of(clickedBlock.getType());
+                clickedBlock.setType(org.bukkit.Material.AIR);
+                NamespacedKey airModel = new NamespacedKey("minecraft", "air");
+                handItem.editMeta(itemMeta -> {
                     itemMeta.customName(Component.text("lifting"));
                     itemMeta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+                    itemMeta.setItemModel(airModel);
                 });
-                inventory.setItemInMainHand(button);
-                inventory.setItemInOffHand(button);
-                player.addPassenger(newChest);
-                newChest.setTransformation(new Transformation(new Vector3f(0.0f, -0.8f, 0.5f), new AxisAngle4f(), new Vector3f(0.8f, 0.8f, 0.8f), new AxisAngle4f()));
+                inventory.setItemInMainHand(handItem);
+                inventory.setItemInOffHand(handItem);
+                player.addPassenger(itemDisplay);
+                itemDisplay.setTransformation(new Transformation(new Vector3f(0.0f, -0.8f, 0.5f), new AxisAngle4f(), new Vector3f(0.8f, 0.8f, 0.8f), new AxisAngle4f()));
                 player.addScoreboardTag("carrying");
                 NamespacedKey slowKey = new NamespacedKey(plugin, "carryingSlow");
                 Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).addModifier(new AttributeModifier(slowKey, -0.05, AttributeModifier.Operation.ADD_NUMBER));
                 player.setFoodLevel(player.getFoodLevel() - 1);
                 NamespacedKey carriedKey = new NamespacedKey(plugin, "carriedUUID");
-                player.getPersistentDataContainer().set(carriedKey, PersistentDataType.STRING, newChest.getUniqueId().toString());
+                player.getPersistentDataContainer().set(carriedKey, PersistentDataType.STRING, itemDisplay.getUniqueId().toString());
             }
         }
     }
